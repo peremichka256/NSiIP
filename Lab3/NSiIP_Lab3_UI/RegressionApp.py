@@ -1,5 +1,7 @@
 import tkinter as tk
 import pickle
+import sklearn
+import numpy as np
 from tkinter import filedialog
 
 
@@ -40,7 +42,7 @@ class RegressionApp:
 
     def browse_model_file(self):
         # open file dialog to select model file
-        file_path = filedialog.askopenfilename(filetypes=[("Pickle Files", "*.pickle")])
+        file_path = filedialog.askopenfilename()
 
         # load model from file
         with open(file_path, 'rb') as f:
@@ -54,10 +56,14 @@ class RegressionApp:
         # get input data from widget
         input_data = self.input_entry.get()
 
-        # preprocess input data if necessary
+        # преобразуем строку с данными в список значений
+        input_data_list = input_data.split(',')
+
+        # преобразуем список в массив numpy и изменяем его форму на 2D
+        input_data_array = np.array(input_data_list).reshape(1, -1)
 
         # make prediction
-        prediction = self.model.predict(input_data)
+        prediction = self.model.predict(input_data_array)
 
         # update output widget
         self.output_label.config(text="Prediction: {}".format(prediction))
